@@ -1,0 +1,8 @@
+name = "sportmind-mvp"
+compatibility_date = "2024-06-01"
+
+[build]
+command = "npm run pages:build"
+
+[[env.production.vars]]
+NEXT_PUBLIC_SITE_URL = "https://sportmind-mvp.pages.dev"
