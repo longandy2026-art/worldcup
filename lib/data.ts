@@ -1,4 +1,5 @@
-import raw from './data.json'
+// Static data module for SportMind AI MVP
+// Data is loaded from Supabase in production, these are fallbacks
 
 export interface Match {
   id: number
@@ -54,11 +55,12 @@ export interface GroupTeam {
   qualify_prob: number
 }
 
-export const MATCHES: Match[] = raw.matches as Match[]
-export const TEAMS: Team[] = raw.teams as Team[]
-export const PLAYERS: Player[] = raw.players as Player[]
-export const SCORERS: Scorer[] = raw.scorers as Scorer[]
-export const GROUPS: Record<string, GroupTeam[]> = raw.groups as Record<string, GroupTeam[]>
+// Empty arrays - data loaded from Supabase
+export const MATCHES: Match[] = []
+export const TEAMS: Team[] = []
+export const PLAYERS: Player[] = []
+export const SCORERS: Scorer[] = []
+export const GROUPS: Record<string, GroupTeam[]> = {}
 
 export function getMatchById(id: number): Match | undefined {
   return MATCHES.find(m => m.id === id)
@@ -71,7 +73,7 @@ export function getTeamByName(name: string): Team | undefined {
 export function getMatchesByDate(): Record<string, Match[]> {
   const map: Record<string, Match[]> = {}
   MATCHES.forEach(m => {
-    const d = m.date || '未知'
+    const d = m.date || 'Unknown'
     if (!map[d]) map[d] = []
     map[d].push(m)
   })
