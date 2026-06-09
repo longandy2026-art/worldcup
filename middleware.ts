@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
+  const pathname = url.pathname
+  
+  // Skip static assets and API routes
+  if (pathname.startsWith('/_next/') || pathname.startsWith('/api/') || 
+      pathname.includes('.') || pathname === '/favicon.ico') {
+    return NextResponse.next()
+  }
   
   // Cookie-based region override (user can manually switch)
   const regionCookie = request.cookies.get('sm_region')?.value
@@ -21,12 +28,12 @@ export function middleware(request: NextRequest) {
     region = 'CN'
   }
   
-  // Set region cookie if just determined (persists for future requests)
+  // Set region cookie if just determined
   const shouldSetCookie = !regionCookie && region === 'CN'
   
-  // Redirect logic — rewrite, not external redirect
-  if (region === 'CN' && !url.pathname.startsWith('/zh-CN') && !url.pathname.startsWith('/api/')) {
-    url.pathname = `/zh-CN${url.pathname}`
+  // Redirect logic
+  if (region === 'CN' && !pathname.startsWith('/zh-CN')) {
+    url.pathname = `/zh-CN${pathname}`
     const res = NextResponse.rewrite(url)
     if (shouldSetCookie) {
       res.cookies.set('sm_region', 'CN', { maxAge: 60 * 60 * 24 * 365, path: '/' })
@@ -35,16 +42,12 @@ export function middleware(request: NextRequest) {
     return res
   }
   
-  if (region === 'OVERSEAS' && !url.pathname.startsWith('/en') && !url.pathname.startsWith('/api/') && !url.pathname.startsWith('/_next')) {
-    url.pathname = `/en${url.pathname}`
+  if (region === 'OVERSEAS' && !pathname.startsWith('/en')) {
+    url.pathname = `/en${pathname}`
     const res = NextResponse.rewrite(url)
     res.headers.set('X-Region', 'OVERSEAS')
     return res
   }
   
   return NextResponse.next()
-}
-
-export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(png|jpg|svg|ico|css|js)$).*)'],
 }
