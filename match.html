@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Detail — SportMind AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⚽</div>
+      <span class="logo-text">SportMind AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="matches.html">Matches</a>
+      <a href="teams.html">Teams</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div id="match-detail" style="margin-top:32px;">
+    <div class="text-center" style="padding:60px 16px;">
+      <div class="spinner" style="margin:0 auto 16px;"></div>
+      <p style="color:var(--text-muted);">Loading match data...</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>SportMind AI — 2026 FIFA World Cup Intelligence Platform</p>
+    <p style="margin-top:8px;font-size:12px;opacity:0.6;">For entertainment and research only. Not betting advice.</p>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+// Match detail page logic
+const params = new URLSearchParams(window.location.search);
+const matchId = parseInt(params.get('id'));
+
+if (!matchId) {
+  document.getElementById('match-detail').innerHTML = '<div class="text-center" style="padding:60px;"><h2>Match not found</h2><a href="matches.html" class="btn btn-primary" style="margin-top:16px;">Back to Matches</a></div>';
+} else {
+  renderMatchDetail(matchId);
+}
+</script>
+</body></html>
