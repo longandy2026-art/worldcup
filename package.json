@@ -1,39 +1,19 @@
 {
-  "name": "sportmind-mvp",
-  "version": "0.1.0",
+  "name": "sportmind-ai",
+  "version": "6.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev .vercel/output/static",
-    "deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static"
+    "build": "node scripts/build-static.js",
+    "deploy": "npm run build && wrangler pages deploy public --branch production",
+    "preview": "npm run build && wrangler pages dev public",
+    "db:init": "wrangler d1 execute sportmind-db --file=schema.sql --remote",
+    "db:import": "node scripts/import-data.js"
   },
   "dependencies": {
-    "next": "14.2.5",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@supabase/supabase-js": "^2.45.0",
-    "lucide-react": "^0.400.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.4.0",
-    "date-fns": "^3.6.0",
-    "swr": "^2.2.5",
-    "zod": "^3.23.8"
+    "hono": "^4.12.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.3",
-    "@types/node": "^20.14.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.6",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "14.2.5",
-    "@cloudflare/next-on-pages": "^1.13.2",
-    "wrangler": "^3.65.0"
+    "wrangler": "^4.0.0"
   }
 }

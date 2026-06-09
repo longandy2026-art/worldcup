@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Leaderboard — SportMind AI</title>
+<meta name="description" content="Global leaderboard of prediction accuracy. Compete with friends and fans worldwide in the 2026 FIFA World Cup prediction challenge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  tr:hover { background: rgba(255,255,255,0.02); }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">⚽</div>
+      <span class="logo-text">SportMind AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/matches.html">Matches</a>
+      <a href="/teams.html">Teams</a>
+      <a href="/leaderboard.html">Leaderboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="text-center" style="text-align:center;padding:40px 16px 20px;">
+    <h1 style="font-size:28px;font-weight:800;margin-bottom:8px;">🏆 Global Leaderboard</h1>
+    <p style="color:var(--text-muted);font-size:14px;">Ranked by prediction accuracy and points earned</p>
+  </div>
+
+  <div class="card" style="max-width:700px;margin:0 auto 48px;padding:0;overflow:hidden;">
+    <table id="leaderboard-table">
+      <thead>
+        <tr><th>Rank</th><th>User</th><th>Points</th><th>Correct</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted);"><div class="spinner" style="margin:0 auto 16px;"></div>Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>SportMind AI — 2026 FIFA World Cup Intelligence Platform</p>
+</footer>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

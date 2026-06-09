@@ -1,8 +1,21 @@
-name = "sportmind-mvp"
-compatibility_date = "2024-06-01"
+name = "sportmind-ai"
+compatibility_date = "2025-06-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "public"
 
-[build]
-command = "npm run pages:build"
+[[d1_databases]]
+binding = "DB"
+database_name = "sportmind-db"
+database_id = "a3645370-9562-4c12-a757-c079776bb977"
 
-[[env.production.vars]]
-NEXT_PUBLIC_SITE_URL = "https://sportmind-mvp.pages.dev"
+[[kv_namespaces]]
+binding = "CACHE"
+id = "fe90662e06df4de88d03236ed68ddfc0"
+
+[[queues.producers]]
+binding = "SCORING_QUEUE"
+queue = "scoring-queue"
+
+[[queues.producers]]
+binding = "AI_REPORT_QUEUE"
+queue = "ai-report-queue"
