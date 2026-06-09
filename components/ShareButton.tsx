@@ -4,7 +4,7 @@ import { Share2 } from 'lucide-react'
 
 export function ShareButton({ matchId, homeTeam, awayTeam }: { matchId: number; homeTeam: string; awayTeam: string }) {
   async function shareText() {
-    const text = 
+    const text = 'I just predicted ' + homeTeam + ' vs ' + awayTeam + ' on SportMind AI! Check out the AI match intelligence'
     if (navigator.share) {
       try {
         await navigator.share({ title: 'SportMind AI', text, url: window.location.href })
