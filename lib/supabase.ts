@@ -1,16 +1,36 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+const isConfigured = supabaseUrl && !supabaseUrl.includes('placeholder') && supabaseAnonKey && !supabaseAnonKey.includes('placeholder')
 
-// Admin client (service role key) — only for server-side API routes
-export const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || '',
-  { auth: { persistSession: false } }
-)
+// Safe client — returns a proxy that throws on usage if not configured,
+// but doesn't crash during module import (build-time safe)
+function createSafeClient(url: string, key: string, options?: any): SupabaseClient {
+  if (!url || !key || url.includes('placeholder') || key.includes('placeholder')) {
+    // Return a proxy that throws on actual usage but is safe to import
+    return new Proxy({} as SupabaseClient, {
+      get(_, prop) {
+        return () => {
+          throw new Error(`Supabase not configured. Missing env vars. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.`)
+        }
+      }
+    }) as SupabaseClient
+  }
+  return createClient(url, key, options)
+}
+
+// Browser/client-side Supabase client
+export const supabase = isConfigured 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : createSafeClient(supabaseUrl, supabaseAnonKey)
+
+// Server-side admin client (service role key) — only for server-side API routes
+export const supabaseAdmin = isConfigured
+  ? createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } })
+  : createSafeClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } })
 
 // ============================================================
 // TypeScript types
@@ -94,56 +114,4 @@ export interface AIReport {
   retry_count: number
   created_at: string
   updated_at: string
-}
-
-export interface ShareStat {
-  id: number
-  user_id?: string
-  match_id?: number
-  region?: string
-  share_type: string
-  image_key?: string
-  created_at: string
-}
-
-// ============================================================
-// Enriched data types for frontend display
-// ============================================================
-
-export interface EnrichedMatch extends Match {
-  home_team_name: string
-  away_team_name: string
-  home_team_elo: number
-  away_team_elo: number
-}
-
-// ============================================================
-// Helper functions
-// ============================================================
-
-export function getStageColor(stage: string): string {
-  switch (stage) {
-    case 'Group Stage': return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-    case 'Round of 32': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-    case 'Round of 16': return 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-    case 'Quarter-Final': return 'bg-orange-500/20 text-orange-400 border-orange-500/30'
-    case 'Semi-Final': return 'bg-rose-500/20 text-rose-400 border-rose-500/30'
-    case 'Third Place': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30'
-    case 'Final': return 'bg-amber-400/20 text-amber-300 border-amber-400/30'
-    default: return 'bg-slate-500/20 text-slate-400 border-slate-500/30'
-  }
-}
-
-export function getStatusBadge(status: string): string {
-  switch (status) {
-    case 'LIVE': return 'bg-red-500 text-white animate-pulse'
-    case 'FINISHED':
-    case 'FT': return 'bg-slate-700 text-slate-300'
-    case 'HT': return 'bg-yellow-500/20 text-yellow-400'
-    default: return 'bg-emerald-500/20 text-emerald-400'
-  }
-}
-
-export function cn(...inputs: import('clsx').ClassValue[]) {
-  return import('tailwind-merge').then(m => m.twMerge(import('clsx').clsx(...inputs)))
 }
